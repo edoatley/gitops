@@ -1,5 +1,5 @@
 # gitops
-PLace to play with RH Gitops in openshift
+Place to play with RH Gitops in openshift
 
 ## References
 
@@ -75,6 +75,8 @@ This creates a nice App in the UI:
 ![](images/ArgoCD-App.png)
 
 ## Trying to create a simple pipeline using Tekton and ArgoCD
+
+**Note: Ran into a lot of issues with authorisation with the default argocd so tried creating a new one in the gitops namespace**
 
 1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
 
