@@ -1,7 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-#  namespace: gitops tried this but access is wrong so will add to default for the operator
+  name: example-task
+  #  namespace: gitops tried this but access is wrong so will add to default for the operator
   namespace: openshift-operators
 spec:
   params:
