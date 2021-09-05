@@ -78,6 +78,15 @@ This creates a nice App in the UI:
 
 **Note: Ran into a lot of issues with authorisation with the default argocd so tried creating a new one in the gitops namespace**
 
+I kept getting the following:
+
+```shell
+pipelines.tekton.dev is forbidden: User "system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller" 
+cannot create resource "pipelines" in API group "tekton.dev" in the namespace "gitops"
+```
+
+To fix this I tried creating a new role binding: ![img.png](images/RoleBinding.png)
+
 1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
 
 2. 
