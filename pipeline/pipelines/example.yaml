@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: gitops
+#  namespace: openshift-operators
+spec:
+  params:
+    - name: appName
+      description: The Application Name
+      default: Unknown Application
+  resources: []
+  workspaces: []
+  tasks:
+    - name: example-task
+      taskRef:
+        kind: ClusterTask
+        name: example-task
+      params:
+        - name: appName
+          value: Override App Name

@@ -3,8 +3,9 @@ PLace to play with RH Gitops in openshift
 
 ## References
 
-This repository is inspired by [Dev Epihany Blog](https://devepiphany.org/2021/04/27/geitting-to-grips-with-gitops/)
-This is useful info [Getting Started with OpenShift GitOps](https://github.com/siamaksade/openshift-gitops-getting-started)
+- This repository is inspired by [Dev Epihany Blog](https://devepiphany.org/2021/04/27/geitting-to-grips-with-gitops/)
+- This is useful info [Getting Started with OpenShift GitOps](https://github.com/siamaksade/openshift-gitops-getting-started)
+- [Official Pipelines Information](https://cloud.redhat.com/learn/topics/ci-cd)
 
 ## Prerequisites
 
@@ -75,7 +76,9 @@ This creates a nice App in the UI:
 
 ## Trying to create a simple pipeline using Tekton and ArgoCD
 
-1. created a pipeline directory to save work and an ArgoCD app as above
+1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
+
+2. 
 
 
 Reminder: need to point at the correct kubeconfig:
