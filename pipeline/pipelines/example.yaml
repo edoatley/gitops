@@ -2,8 +2,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: example-pipeline
-  namespace: gitops
-#  namespace: openshift-operators
+#  namespace: gitops tried this but access is wrong so will add to default for the operator
+  namespace: openshift-operators
 spec:
   params:
     - name: appName
