@@ -3,7 +3,7 @@ kind: Task
 metadata:
   name: example-task
   #  namespace: gitops tried this but access is wrong so will add to default for the operator
-  namespace: openshift-operators
+  #  namespace: openshift-operators tried this but still an access issue
 spec:
   params:
     - name: appName

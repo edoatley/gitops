@@ -1,0 +1,3 @@
+resources:
+  - pipelines/example.yaml
+  - tasks/example.yaml
