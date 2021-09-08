@@ -130,6 +130,13 @@ Pipeline example/example-pipeline can't be Run; it contains Tasks that don't exi
 ```
 
 so tried changing the type reference of the task in the pipeline object from `ClusterTask` to `Task`
+
+This seemed to work fine when I reran the `PipelineRun`
+
+![img.png](images/Pipeline-Run-Success.png)
+
+
+
 Reminder: need to point at the correct kubeconfig:
 
 ```shell

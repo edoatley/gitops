@@ -1,0 +1,77 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: primes-pipeline
+  namespace: primes
+spec:
+  params:
+    - name: IMAGE_NAME
+      type: string
+    - name: GIT_REPO
+      type: string
+    - name: GIT_REVISION
+      type: string
+
+  workspaces:
+    - name: workspace
+
+  tasks:
+    - name: git-close
+      taskRef:
+        name: checkout-task
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+
+    - name: build
+      taskRef:
+        kind: Task
+        name: build-task
+      workspaces:
+        - name: source
+          workspace: workspace
+      runAfter:
+        - git-clone
+
+    - name: cve-check
+      taskRef:
+        kind: Task
+        name: cve-check-task
+      workspaces:
+        - name: source
+          workspace: workspace
+      runAfter:
+        - build
+
+    - name: build
+      taskRef:
+        name: s2i-java
+        kind: ClusterTask
+      runAfter:
+        - cve-check
+      workspaces:
+        - name: source
+          workspace: workspace
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: "false"
+
+    - name: deploy
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      runAfter:
+        - s2i
+      params:
+        - name: SCRIPT
+          value: |
+            oc new-app --docker-image $(params.IMAGE_NAME)
