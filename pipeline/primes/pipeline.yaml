@@ -51,8 +51,8 @@ spec:
       runAfter:
         - build
       workspaces:
-        - name: source
-          workspace: workspace
+        - name: workspace
+          workspace: source
       params:
         - name: IMAGE
           value: $(params.IMAGE_NAME)
