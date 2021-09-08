@@ -13,7 +13,7 @@ spec:
   tasks:
     - name: example-task
       taskRef:
-        kind: ClusterTask
+        kind: Task
         name: example-task
       params:
         - name: appName

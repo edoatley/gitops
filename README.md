@@ -100,11 +100,36 @@ cannot create resource "pipelines" in API group "tekton.dev" in the namespace "g
 
 To fix this I tried creating a new role binding: ![img.png](images/RoleBinding.png) which worked!
 
+a shorthand:
+
+```shell
+oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n example
+```
+
 1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
 
 2. Ran the app and it synced ok
 
+# Simple Example Pipeline
 
+Created the following definitions to try a pipeline:
+
+- [namespaces/example.yaml](./pipeline/namespaces/example.yaml)
+- [pipelines/example.yaml](./pipeline/pipelines/example.yaml)
+- [tasks/example.yaml](./pipeline/tasks/example.yaml)
+- [rolebinding/ed-rolebinding.yaml](./pipeline/rolebinding/ed-rolebinding.yaml)
+
+Can then check the UI and see it in the Pipelines menu item:
+
+![img.png](images/pipeline-in-GUI.png)
+
+Tried to create a `PipelineRun` in the UI and had an issue:
+
+```shell
+Pipeline example/example-pipeline can't be Run; it contains Tasks that don't exist: Couldn't retrieve Task "example-task": clustertasks.tekton.dev "example-task" not found
+```
+
+so tried changing the type reference of the task in the pipeline object from `ClusterTask` to `Task`
 Reminder: need to point at the correct kubeconfig:
 
 ```shell
