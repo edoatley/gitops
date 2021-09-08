@@ -12,11 +12,7 @@ spec:
       name: clean-build-test
       script: |
         #!/usr/bin/env bash
-        echo "source contains: "
-        ls source
         cp -r source build
-        cd build
-        echo "build/source contains: "
-        ls gradlew
-        echo "ready to build"
+        cd build/source
+        echo "ready to build $(ls gradlew)"
         gradlew clean build test dependencyCheckAnalyze
