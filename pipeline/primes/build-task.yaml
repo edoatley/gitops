@@ -11,8 +11,10 @@ spec:
     - image: docker.io/openliberty/open-liberty
       script: |
         #!/usr/bin/env bash
-        set -x
+        echo "source contains: "
+        ls source
         cp -r source build
         cd build
-        ls
+        echo "build/source contains: "
+        ls source
         ./gradlew clean build test dependencyCheckAnalyze
