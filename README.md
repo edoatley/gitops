@@ -31,6 +31,12 @@ Re-type new password:
 Adding password for user user2
 ```
 
+created a secret for the htpasswd file:
+
+```shell
+oc create secret generic htpass-secret --from-file=htpasswd=.htpasswd -n openshift-config
+```
+
 then applied:
 
 ```yaml
@@ -46,11 +52,18 @@ spec:
       htpasswd:
         fileData:
           name: htpass-secret
-
 ```
 
-2. Logged on to UI as both
-3. Created RoleBindings
+2. Log on as both
+
+```shell
+oc login -u ed -p <password>
+oc login -u edoatley -p <password>
+```
+
+3. Logon to UI as Admin and created RoleBindings:
+
+![img.png](images/edoatley-rolebinding.png)
 
 ## Following along the blog
 
@@ -85,11 +98,11 @@ pipelines.tekton.dev is forbidden: User "system:serviceaccount:openshift-gitops:
 cannot create resource "pipelines" in API group "tekton.dev" in the namespace "gitops"
 ```
 
-To fix this I tried creating a new role binding: ![img.png](images/RoleBinding.png)
+To fix this I tried creating a new role binding: ![img.png](images/RoleBinding.png) which worked!
 
 1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
 
-2. 
+2. Ran the app and it synced ok
 
 
 Reminder: need to point at the correct kubeconfig:

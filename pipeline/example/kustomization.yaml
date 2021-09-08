@@ -1,0 +1,5 @@
+resources:
+  - namespaces/example.yaml
+  - pipelines/example.yaml
+  - tasks/example.yaml
+  - rolebinding/ed-rolebinding.yaml
