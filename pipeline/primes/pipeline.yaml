@@ -12,12 +12,15 @@ spec:
     - name: GIT_REVISION
       type: string
   workspaces:
-    - name: workspace
+    - name: shared-workspace
   tasks:
     - name: git-clone
       taskRef:
         name: git-clone
         kind: ClusterTask
+      workspaces:
+        - name: shared-workspace
+          workspace: workspace
       params:
         - name: url
           value: $(params.GIT_REPO)
@@ -33,7 +36,7 @@ spec:
         kind: Task
         name: build-task
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: workspace
       runAfter:
         - git-clone
@@ -43,7 +46,7 @@ spec:
         kind: Task
         name: cve-check-task
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: workspace
       runAfter:
         - build
@@ -55,7 +58,7 @@ spec:
       runAfter:
         - cve-check
       workspaces:
-        - name: source
+        - name: shared-workspace
           workspace: workspace
       params:
         - name: IMAGE
