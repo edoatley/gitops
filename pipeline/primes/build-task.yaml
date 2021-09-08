@@ -9,6 +9,7 @@ spec:
   - name: build
   steps:
     - image: docker.io/openliberty/open-liberty
+      name: clean-build-test
       script: |
         #!/usr/bin/env bash
         echo "source contains: "
@@ -16,5 +17,6 @@ spec:
         cp -r source build
         cd build
         echo "build/source contains: "
-        ls source
-        ./gradlew clean build test dependencyCheckAnalyze
+        ls gradlew
+        echo "ready to build"
+        gradlew clean build test dependencyCheckAnalyze
