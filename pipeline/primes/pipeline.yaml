@@ -14,9 +14,9 @@ spec:
   workspaces:
     - name: workspace
   tasks:
-    - name: git-clone
+    - name: checkout-task
       taskRef:
-        name: checkout-task
+        name: git-clone
         kind: ClusterTask
       params:
         - name: url
