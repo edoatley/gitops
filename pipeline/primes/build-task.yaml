@@ -6,9 +6,10 @@ metadata:
 spec:
   workspaces:
   - name: source
+  - name: build
   steps:
     - image: docker.io/openliberty/open-liberty
       script: |
         #!/usr/bin/env bash
         cd source
-        ./gradlew clean build test
+        ./gradlew clean build test dependencyCheckAnalyze
