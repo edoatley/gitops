@@ -7,7 +7,7 @@ spec:
   workspaces:
   - name: source
   steps:
-    - image: registry.redhat.io/ubi7/ubi-minimal
+    - image: docker.io/openliberty/open-liberty
       script: |
         #!/usr/bin/env bash
         cd source
