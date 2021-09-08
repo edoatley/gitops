@@ -11,12 +11,10 @@ spec:
       type: string
     - name: GIT_REVISION
       type: string
-
   workspaces:
     - name: workspace
-
   tasks:
-    - name: git-close
+    - name: git-clone
       taskRef:
         name: checkout-task
         kind: ClusterTask
@@ -50,7 +48,7 @@ spec:
       runAfter:
         - build
 
-    - name: build
+    - name: s2i
       taskRef:
         name: s2i-java
         kind: ClusterTask
