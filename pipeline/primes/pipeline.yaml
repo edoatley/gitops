@@ -12,7 +12,7 @@ spec:
     - name: GIT_REVISION
       type: string
   workspaces:
-    - name: output
+    - name: workspace
   tasks:
     - name: git-clone
       taskRef:
@@ -36,7 +36,7 @@ spec:
         kind: Task
         name: build-task
       workspaces:
-        - name: output
+        - name: source
           workspace: workspace
       runAfter:
         - git-clone
@@ -46,7 +46,7 @@ spec:
         kind: Task
         name: cve-check-task
       workspaces:
-        - name: output
+        - name: source
           workspace: workspace
       runAfter:
         - build
@@ -58,7 +58,7 @@ spec:
       runAfter:
         - cve-check
       workspaces:
-        - name: output
+        - name: source
           workspace: workspace
       params:
         - name: IMAGE

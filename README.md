@@ -135,6 +135,34 @@ This seemed to work fine when I reran the `PipelineRun`
 
 ![img.png](images/Pipeline-Run-Success.png)
 
+Openshift Pipeline
+==================
+
+## Setup
+
+- Used the IPI installer to create a cluster on GCP
+- Installed the Gitops operator and got hold of credentials
+- Installed the Pipelines operator 
+- Created .htpasswd based users
+
+## Pipeline Creation
+
+Created the files in the [primes](./pipeline/primes) to define a pipeline and tasks
+to follow this flow
+
+```shell
+checkout --> build/test --> CVE scan --> Source 2 Image --> deploy
+```
+
+In the UI this looks like this:
+
+![img.png](images/Primes-Pipeline.png)
+
+
+
+
+
+
 
 
 Reminder: need to point at the correct kubeconfig:
@@ -142,3 +170,4 @@ Reminder: need to point at the correct kubeconfig:
 ```shell
 export KUBECONFIG=/Users/edoatley/code/openshift/auth/kubeconfig
 ```
+
