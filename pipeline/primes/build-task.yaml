@@ -11,7 +11,8 @@ spec:
     - image: docker.io/openliberty/open-liberty
       script: |
         #!/usr/bin/env bash
-        ls
+        set -x
         cp -r source build
         cd build
+        ls
         ./gradlew clean build test dependencyCheckAnalyze
