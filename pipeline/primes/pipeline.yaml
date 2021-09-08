@@ -14,7 +14,7 @@ spec:
   workspaces:
     - name: workspace
   tasks:
-    - name: checkout-task
+    - name: git-clone
       taskRef:
         name: git-clone
         kind: ClusterTask
