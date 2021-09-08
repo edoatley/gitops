@@ -77,7 +77,7 @@ oc extract secret/openshift-gitops-cluster -n openshift-gitops --to=-
 
 2. From the [Openshift UI](./images/ArgoCD-Link.png) navigate to the cluster Argo CD link and login with the password above and admin.
 
-3. create a folder config and copy utherp0's console link [example](./config/console-link.yaml) and commit.
+3. Create a folder config and copy utherp0's console link [example](./config/console-link.yaml) and commit.
 
 4. In ArgoCD create an app:  
 
@@ -135,8 +135,8 @@ This seemed to work fine when I reran the `PipelineRun`
 
 ![img.png](images/Pipeline-Run-Success.png)
 
-Openshift Pipeline
-==================
+Openshift Pipeline For a Real Project
+=====================================
 
 ## Setup
 
@@ -153,6 +153,11 @@ to follow this flow
 ```shell
 checkout --> build/test --> CVE scan --> Source 2 Image --> deploy
 ```
+
+Created an app in ArgoCD and synchronised:
+
+![img.png](images/ArgoCD-Success-Sync.png)
+
 
 In the UI this looks like this:
 
