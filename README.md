@@ -165,10 +165,27 @@ In the UI this looks like this:
 
 ## Challenges
 
+**It should have been that easy but it wasnt!**
 
-- [ ] Hit a bit of trouble running the gradlew build with an error stating gradlew was not 
-   found though ls found the file. Maybe we need a gradle image https://hub.docker.com/_/gradle 
-- [ ] Lots of issues with not being able to share a workspace. Perhaps this is by design? Need to research
+- [x] Hit a bit of trouble running the gradlew build with an error stating gradlew was not 
+   found though ls found the file. Maybe we need a gradle image https://hub.docker.com/_/gradle
+> using the image docker.io/bitnami/gradle seemed to help and replacing calls to gradlew with gradle
+> Not sure how wise this is going forward as gradlew is intended to stop 'it works on my machine' type fun
+ 
+- [x] Lots of issues with not being able to share a workspace as the volumes were always RWO (ReadWriteOnce) and the 
+      storage class provided by GCP did not allow ReadWriteMany (RWX). 
+> This [article](https://medium.com/@Sushil_Kumar/readwritemany-persistent-volumes-in-google-kubernetes-engine-a0b93e203180) 
+> explains it is expected and there is likely a way to get it to work but not without derailing the point of this exercise!
+> We will try to work in immutable steps with input and output workspaces to see if that works...
+> 
+> Was tricky to get volume claims to work due to some odd GCP behaviour so ended up pointing source and build workspaces
+> at the same PVC which interestingly allowed it to proceed and also gave an error
+> 
+> ```shell
+> cp: cannot copy a directory, 'source', into itself, 'build/source'
+> ```
+> 
+> So interested to see how these workspaces are mounted in the image...
 
 
 

@@ -12,4 +12,5 @@ spec:
       name: clean-build-test
       script: |
         #!/usr/bin/env bash
+        cd build
         gradle clean build test dependencyCheckAnalyze
