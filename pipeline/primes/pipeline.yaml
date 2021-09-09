@@ -13,7 +13,7 @@ spec:
       type: string
   workspaces:
     - name: source
-    - name: build
+    - name: temp
   tasks:
     - name: git-clone
       taskRef:
@@ -40,7 +40,7 @@ spec:
         - name: source
           workspace: source
         - name: build
-          workspace: build
+          workspace: temp
       runAfter:
         - git-clone
 
