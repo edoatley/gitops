@@ -163,6 +163,12 @@ In the UI this looks like this:
 
 ![img.png](images/Primes-Pipeline.png)
 
+## Challenges
+
+
+- [ ] Hit a bit of trouble running the gradlew build with an error stating gradlew was not 
+   found though ls found the file. Maybe we need a gradle image https://hub.docker.com/_/gradle 
+- [ ] Lots of issues with not being able to share a workspace. Perhaps this is by design? Need to research
 
 
 
