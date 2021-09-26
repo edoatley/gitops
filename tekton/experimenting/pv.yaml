@@ -1,15 +1,15 @@
-metadata:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: tekton-pv
   labels:
     type: local
+  namespace: tekton
 spec:
   storageClassName: manual
   capacity:
     storage: 10Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   hostPath:
     path: /Users/edoatley/code/openshift/tekton/pv

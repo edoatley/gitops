@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: primes-build
+  namespace: tekton
+spec:
+  workspaces:
+    - name: shared-workspace
+  params:
+    - name: GIT_REPO
+      default: https://github.com/edoatley/primes.git
+    - name: GIT_REVISION
+      default: master
+  tasks:
+    - name: clone-repository
+      taskRef:
+        name: git-clone
+        kind: Task
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+

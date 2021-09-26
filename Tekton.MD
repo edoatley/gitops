@@ -3,7 +3,7 @@ Tekton Investigation
 
 ## Set up
 
-1. Set up a Persistent Volume - applied [pv.yaml](./tekton/pv.yaml)
+1. Set up a Persistent Volume - applied [pv.yaml](tekton/experimenting/pv.yaml)
 > To run a CI/CD workflow, you need to provide Tekton a Persistent Volume 
 > for storage purposes. Tekton requests a volume of 5Gi with the default storage class by default.
 2. Install `tkn` CLI:
@@ -13,7 +13,7 @@ brew install tektoncd/tools/tektoncd-cli
 ```
 ## First Task
 
-1. Create a simple hello world [task](./tekton/first-task.yaml)
+1. Create a simple hello world [task](tekton/experimenting/first-task.yaml)
 2. Dry run a TaskRun with `tkn`:
 ```shell
 $ tkn task start hello --dry-run

@@ -1,0 +1,70 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gradle
+spec:
+  inputs:
+    resources:
+      - name: app-source
+        type: git
+        optional: true
+  params:
+    - name: task
+      type: string
+      default: "tasks"
+      description: task name to run
+    - name: url
+      description: git url to clone
+      type: string
+    - name: revision
+      description: git revision to checkout (branch, tag, sha, ref)
+      type: string
+      default: master
+    - name: submodules
+      description: defines if the resource should initialize and fetch the submodules
+      type: string
+      default: "true"
+    - name: depth
+      description: performs a shallow clone where only the most recent commit(s) will be fetched
+      type: string
+      default: "1"
+    - name: sslVerify
+      description: defines if http.sslVerify should be set to true or false in the global git config
+      type: string
+      default: "true"
+    - name: subdirectory
+      description: subdirectory inside the "output" workspace to clone the git repo into
+      type: string
+      default: "src"
+  results:
+    - name: commit
+      description: The precise commit SHA that was fetched by this Task
+  steps:
+    - name: clone-repo
+      image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:latest
+      script: |
+        CHECKOUT_DIR="/workspace/$(params.subdirectory)"
+        rm -rf "$CHECKOUT_DIR"/*
+        rm -rf "$CHECKOUT_DIR"/.[!.]*
+        rm -rf "$CHECKOUT_DIR"/..?*
+        /ko-app/git-init \
+          -url "$(params.url)" \
+          -revision "$(params.revision)" \
+          -path "$CHECKOUT_DIR" \
+          -sslVerify="$(params.sslVerify)" \
+          -submodules="$(params.submodules)" \
+          -depth="$(params.depth)"
+        cd "$CHECKOUT_DIR"
+        RESULT_SHA="$(git rev-parse HEAD | tr -d '\n')"
+        EXIT_CODE="$?"
+        if [ "$EXIT_CODE" != 0 ]
+        then
+          exit $EXIT_CODE
+        fi
+        echo -n "$RESULT_SHA" > $(results.commit.path)
+    - name: gradle
+      image: dimetron/gradle-k8s:latest
+      script: |
+        set -e ; cd "/workspace/$(params.subdirectory)"
+        gradle -q --console=plain -PlocalMode=true $(params.task)
+        exit "$?"

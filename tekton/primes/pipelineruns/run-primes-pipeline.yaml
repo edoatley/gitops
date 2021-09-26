@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: primes-build-run-
+  namespace: tekton
+spec:
+  pipelineRef:
+    name: primes-build
+  params:
+    - name: GIT_REPO
+      value: https://github.com/edoatley/primes.git
+    - name: GIT_REVISION
+      value: master
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi

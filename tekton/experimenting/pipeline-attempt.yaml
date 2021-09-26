@@ -1,0 +1,78 @@
+# Task to clone source repo
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: clone-source-to-workspace
+  namespace: tekton
+spec:
+  workspaces:
+    - name: scratchpad
+  resources:
+    inputs:
+      - name: source
+        type: git
+        targetPath: source
+  steps:
+    - name: clone-source-to-scratchpad
+      image: ubuntu
+      script: |
+        cp -avr $(inputs.resources.source.path)/ $(workspaces.scratchpad.path)/
+---
+# Task to build
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: gradle-build-test
+  namespace: tekton
+spec:
+  workspaces:
+    - name: scratchpad
+  params:
+    - name: tasks
+      type: string
+      default: clean build test
+      description: Gradle tasks to execute
+  steps:
+    - name: install-dependencies
+      image: gradle:7.2.0-jdk11
+      script: |
+        cd $(workspaces.scratchpad.path)/
+        gradle $(inputs.params.tasks)
+---
+# Pipeline
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: primes-pipeline
+  namespace: tekton
+spec:
+  resources:
+    - name: git-source
+      type: git
+  params:
+    - name: IMAGE_NAME
+      type: string
+    - name: BUILD_TASKS
+      type: string
+  workspaces:
+    - name: scratchpad
+  tasks:
+    - name: checkout
+      taskRef:
+        name: clone-source-to-workspace
+      workspaces:
+        - name: output
+          workspace: scratchpad
+      resources:
+        inputs:
+          - name: source
+            resource: git-source
+
+    - name: gradle-build-test
+      taskRef:
+        name: gradle-build-test
+      params:
+        - name: tasks
+          value: $(params.BUILD_TASKS)
+      runAfter:
+        - checkout

@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: primes-pipeline-run-a
+  namespace: tekton
+spec:
+  params:
+    - name: GIT_REVISION
+      value: master
+    - name: IMAGE_NAME
+      value: edoatley/primes
+  pipelineRef:
+    name: primes-pipeline
+  resources:
+    - name: git-source
+      resourceRef:
+        name: git-source
+  serviceAccountName: default
+  timeout: 1h0m0s
+  workspaces:
+    - name: scratchpad
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi

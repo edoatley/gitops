@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: git-clone-
+  labels:
+    tekton.dev/task: git-clone
+spec:
+  taskRef:
+    name: clone-source-to-workspace
+  serviceAccountName: default
+  resources:
+    inputs:
+      - name: source
+        type: git
+        targetPath: source
+  params:
+    - name: url
+      value: https://github.com/redhat-scholars/tekton-tutorial-greeter
+    - name: revision
+      value: master
+  workspaces:
+    - name: output
+      persistentVolumeClaim:
+        claimName: tekton-tutorial-sources
+
