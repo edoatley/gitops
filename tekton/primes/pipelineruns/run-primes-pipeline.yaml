@@ -11,6 +11,7 @@ spec:
       value: https://github.com/edoatley/primes.git
     - name: GIT_REVISION
       value: master
+  serviceAccountName: build-bot
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:

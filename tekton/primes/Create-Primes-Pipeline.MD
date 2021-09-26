@@ -56,3 +56,55 @@ which gratifyingly gave successful output:
 
 ### Task 2 - gradle build
 
+The gradle build task is fairly simple - it shares the workspace created to checkout the repository and uses the gradle 
+image to allow the project to be built using gradle. As I was refactoring the task to ensure it was working correctly I 
+was executing the following debug cycle:
+
+```shell
+$ k delete $(kubectl get pods --field-selector=status.phase!=Running -o name)
+pod "primes-build-run-cvljj-build-and-test-qrv66-pod-cpcls" deleted
+pod "primes-build-run-cvljj-clone-repository-6dxjv-pod-shp8d" deleted
+
+$ k apply -f tekton/primes/tasks/gradle.yaml
+task.tekton.dev/gradle configured
+
+$ k create -f tekton/primes/pipelineruns/run-primes-pipeline.yaml                                                                        Py base ○ docker-desktop/tekton 19:17:54
+pipelinerun.tekton.dev/primes-build-run-tdzj8 created
+
+$ tkn pr logs primes-build-run-tdzj8
+#<log output>
+```
+
+The end state `Task` essentially just takes a workspace with the source and applies a executes a provided list of tasks
+with a given set of arguments.
+
+### Task 3 - sonarqube (commented out for now)
+
+This task is simply reusing the build task from step 2 to execute the sonarqube task with gradle. It will need some
+credentials provided by a secret.
+
+### Task 4 - mutation test
+
+This task is simply reusing the build task from step 2 to execute the pitest task with gradle.
+
+### Task 5 - buildah
+
+This task is responsible for building the docker image - luckily buildah has a tekton task which is defined [here](https://github.com/tektoncd/catalog/blob/main/task/buildah/0.2/buildah.yaml)
+and saved to [tekton-buildah.yaml](./tasks/tekton-buildah.yaml)
+
+One bit of set up is the authentication to docker which I did as follows:
+
+```shell
+kubectl create secret -n tekton docker-registry container-registry-secret \
+--docker-server=https://index.docker.io/v2/ \
+--docker-username=edoatley \
+--docker-password=<password>
+
+kubectl create sa -n tekton build-bot
+
+kubectl patch serviceaccount build-bot \
+-p '{"secrets": [{"name": "container-registry-secret"}]}'
+```
+
+Then use the `build-bot` service account in the pipeline run
+
