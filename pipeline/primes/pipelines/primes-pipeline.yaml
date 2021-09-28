@@ -1,0 +1,109 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: primes-build
+  namespace: primes
+spec:
+
+  workspaces:
+    - name: shared-workspace
+
+  params:
+    - name: GIT_REPO
+      default: https://github.com/edoatley/primes.git
+      description: The repository to build
+    - name: GIT_REVISION
+      default: master
+      description: The git revision to use
+    - name: GRADLE_BUILD_TASKS
+      default: "clean build test"
+      description: The gradle tasks required to build and test the project
+    - name: GRADLE_BUILD_ARGS
+      default: "--stacktrace"
+      description: The gradle args required to build and test the project
+    - name: GRADLE_SONAR_TASKS
+      default: "sonarqube"
+      description: The gradle tasks required to execute sonarqube
+    - name: GRADLE_SONAR_ARGS
+      default: "--stacktrace"
+      description: The gradle args required to execute sonarqube
+    - name: DOCKER_IMAGE
+      default: "docker.io/edoatley/primes"
+
+  tasks:
+    - name: clone-repository
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+
+    - name: build-and-test
+      taskRef:
+        name: gradle
+        kind: Task
+      params:
+        - name: tasks
+          value: $(params.GRADLE_BUILD_TASKS)
+        - name: arguments
+          value: $(params.GRADLE_BUILD_ARGS)
+        - name: subdirectory
+          value: "."
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - clone-repository
+
+    - name: mutation-test
+      taskRef:
+        name: gradle
+        kind: Task
+      params:
+        - name: tasks
+          value: "pitest"
+        - name: arguments
+          value: "--stacktrace"
+        - name: subdirectory
+          value: "."
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - build-and-test
+
+    #    - name: sonarqube-scan
+    #      taskRef:
+    #        name: gradle
+    #        kind: Task
+    #      params:
+    #      - name: tasks
+    #        value: $(params.GRADLE_SONAR_TASKS)
+    #      - name: arguments
+    #        value: $(params.GRADLE_SONAR_ARGS)
+    #      - name: subdirectory
+    #        value: "."
+    #      workspaces:
+    #      - name: source
+    #        workspace: shared-workspace
+    #      runAfter:
+    #        - build-and-test
+
+    - name: create-image
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+        - name: IMAGE
+          value: $(params.DOCKER_IMAGE)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - mutation-test

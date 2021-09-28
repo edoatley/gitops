@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: gradle
+  namespace: primes
+spec:
+  params:
+    - name: tasks
+      type: string
+      default: "clean build test dependencyCheckAnalyze"
+      description: gradle task names to run
+    - name: arguments
+      type: string
+      default: "--stacktrace"
+      description: gradle task names to run
+    - name: subdirectory
+      type: string
+      default: "."
+      description: subdirectory to use and run gradle task from
+  workspaces:
+    - name: source
+  steps:
+    - name: gradle-build
+      workingDir: $(workspaces.source.path)
+      image: gradle:7.2.0-jdk11
+      script: |
+        set -e ; cd "./$(params.subdirectory)"
+        gradle -q --console=plain -PlocalMode=true $(params.tasks) $(params.arguments)
+        exit "$?"
