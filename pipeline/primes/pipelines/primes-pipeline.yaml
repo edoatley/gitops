@@ -25,7 +25,7 @@ spec:
       default: "sonarqube"
       description: The gradle tasks required to execute sonarqube
     - name: GRADLE_SONAR_ARGS
-      default: "-Dcf418ac154f8be4f0b5616d5323e67c363912652 -Dsonar.host.url=http://sonarqube.sonarqube:9000 --stacktrace"
+      default: "-Dsonar.login=cf418ac154f8be4f0b5616d5323e67c363912652 -Dsonar.host.url=http://sonarqube-sonarqube.apps.test1.edoatley.com --stacktrace"
       description: The gradle args required to execute sonarqube
     - name: DOCKER_IMAGE
       default: "docker.io/edoatley/primes"
@@ -78,22 +78,22 @@ spec:
       runAfter:
         - build-and-test
 
-#    - name: sonarqube-scan
-#      taskRef:
-#        name: gradle
-#        kind: Task
-#      params:
-#        - name: tasks
-#          value: $(params.GRADLE_SONAR_TASKS)
-#        - name: arguments
-#          value: $(params.GRADLE_SONAR_ARGS)
-#        - name: subdirectory
-#          value: "."
-#      workspaces:
-#        - name: source
-#          workspace: shared-workspace
-#      runAfter:
-#        - mutation-test
+    - name: sonarqube-scan
+      taskRef:
+        name: gradle
+        kind: Task
+      params:
+        - name: tasks
+          value: $(params.GRADLE_SONAR_TASKS)
+        - name: arguments
+          value: $(params.GRADLE_SONAR_ARGS)
+        - name: subdirectory
+          value: "."
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - mutation-test
 
     - name: create-image
       taskRef:
@@ -106,5 +106,4 @@ spec:
         - name: source
           workspace: shared-workspace
       runAfter:
-        - mutation-test
-#        - sonarqube-scan
+        - sonarqube-scan
