@@ -23,9 +23,10 @@ I am going to demonstrate creating a pipeline using Tekton and GitOps and then r
 - checkout from github
 - build and test
 - mutation test
+- Sonarqube test
 - build and push a docker image
 
-### 1. Set up SonarQube - Already Done
+### 1. Set up SonarQube
 
 ```shell
 # create a project
@@ -39,4 +40,25 @@ oc get routes -n sonarqube
 ```
 
 The default credentials were then admin/admin
-![sonarqube](images/sonarqube.png)
+![sonarqube](sonarqube.png)
+
+### 2. Openshift GitOps (ArgoCD) to create the pipeline
+
+There are a few key configurations we need to make this work:
+
+![configs](key-gitops-configs.png)
+
+Two of these tasks are provided by Openshift/tekton - namely the git clone and buildah image builder
+Interestingly there seems to be little out there for gradle so created a task for that
+
+### 3. Run ArgoCD
+
+### 4. Run the pipeline
+
+The pipeline looks as follows and can now be executed:
+
+![img.png](Openshift-Pipeline.png)
+
+Whilst it is possible to trigger the pipeline based on a commit event or programmatically I chose to set it running using the UI:
+
+![img.png](Trigger-Pipeline.png)

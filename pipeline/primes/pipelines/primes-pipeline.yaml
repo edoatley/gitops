@@ -19,13 +19,13 @@ spec:
       default: "clean build test"
       description: The gradle tasks required to build and test the project
     - name: GRADLE_BUILD_ARGS
-      default: "-Dcf418ac154f8be4f0b5616d5323e67c363912652 -Dsonar.host.url=http://sonarqube.sonarqube --stacktrace"
+      default: "--stacktrace"
       description: The gradle args required to build and test the project
     - name: GRADLE_SONAR_TASKS
       default: "sonarqube"
       description: The gradle tasks required to execute sonarqube
     - name: GRADLE_SONAR_ARGS
-      default: "--stacktrace"
+      default: "-Dcf418ac154f8be4f0b5616d5323e67c363912652 -Dsonar.host.url=http://sonarqube.sonarqube --stacktrace"
       description: The gradle args required to execute sonarqube
     - name: DOCKER_IMAGE
       default: "docker.io/edoatley/primes"
