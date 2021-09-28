@@ -19,7 +19,7 @@ spec:
       default: "clean build test"
       description: The gradle tasks required to build and test the project
     - name: GRADLE_BUILD_ARGS
-      default: "--stacktrace"
+      default: "-Dcf418ac154f8be4f0b5616d5323e67c363912652 -Dsonar.host.url=http://sonarqube.sonarqube --stacktrace"
       description: The gradle args required to build and test the project
     - name: GRADLE_SONAR_TASKS
       default: "sonarqube"
@@ -78,22 +78,22 @@ spec:
       runAfter:
         - build-and-test
 
-    #    - name: sonarqube-scan
-    #      taskRef:
-    #        name: gradle
-    #        kind: Task
-    #      params:
-    #      - name: tasks
-    #        value: $(params.GRADLE_SONAR_TASKS)
-    #      - name: arguments
-    #        value: $(params.GRADLE_SONAR_ARGS)
-    #      - name: subdirectory
-    #        value: "."
-    #      workspaces:
-    #      - name: source
-    #        workspace: shared-workspace
-    #      runAfter:
-    #        - build-and-test
+    - name: sonarqube-scan
+      taskRef:
+        name: gradle
+        kind: Task
+      params:
+        - name: tasks
+          value: $(params.GRADLE_SONAR_TASKS)
+        - name: arguments
+          value: $(params.GRADLE_SONAR_ARGS)
+        - name: subdirectory
+          value: "."
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - mutation-test
 
     - name: create-image
       taskRef:
@@ -106,4 +106,4 @@ spec:
         - name: source
           workspace: shared-workspace
       runAfter:
-        - mutation-test
+        - sonarqube-scan
