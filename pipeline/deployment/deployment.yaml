@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: primes-deployment
+  name: primes-deployment
+  namespace: primes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: primes-deployment
+  template:
+    metadata:
+      labels:
+        app: primes-deployment
+    spec:
+      containers:
+        - image: edoatley/primes
+          imagePullPolicy: Always
+          name: primes
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: primes-deployment
+  name: primes-deployment
+  namespace: primes
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: primes-deployment
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: primes-deployment
+  name: primes
+  namespace: primes
+spec:
+  host: primes.apps.test1.edoatley.com
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: primes-deployment
+    weight: 100
+  wildcardPolicy: None
