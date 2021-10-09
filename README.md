@@ -103,7 +103,7 @@ To fix this I tried creating a new role binding: ![img.png](images/RoleBinding.p
 a shorthand:
 
 ```shell
-oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n example
+oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n primes
 ```
 
 1. created a pipeline directory to save work and an ArgoCD app: ![](images/ArgoCD-Pipeline-App.png)
